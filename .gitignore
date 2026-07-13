@@ -13,9 +13,8 @@ dist/
 .env
 *.local
 
-# Trained model artifacts (place manually; do not commit large binaries)
-backend/artifacts/*.joblib
-backend/linearsvc_model.joblib
+# Trained model disertakan dalam repo (2.8 MB) agar app langsung jalan
+# setelah clone. Model ada di backend/artifacts/linearsvc_model.joblib.
 
 # Editor / OS
 .vscode/
