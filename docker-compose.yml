@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: kdj-backend
+    ports:
+      - "8000:8000"
+    environment:
+      MODEL_PATH: artifacts/linearsvc_model.joblib
+      MAX_UPLOAD_SIZE_MB: "15"
+      MIN_TEXT_LENGTH: "300"
+      CORS_ORIGINS: http://localhost:5173
+      LOG_LEVEL: INFO
+    # The trained model must exist at backend/artifacts/linearsvc_model.joblib
+    # before building. See README "Penempatan Model".
+
+  frontend:
+    build:
+      context: ./frontend/vite-project
+      args:
+        VITE_API_BASE_URL: http://localhost:8000/api/v1
+    container_name: kdj-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend

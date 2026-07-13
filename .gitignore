@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.egg-info/
+.pytest_cache/
+
+# Node
+node_modules/
+dist/
+.env
+*.local
+
+# Trained model artifacts (place manually; do not commit large binaries)
+backend/artifacts/*.joblib
+backend/linearsvc_model.joblib
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# AI / agent tooling (Claude Code, Cursor, Copilot, dsb.)
+.claude/
+.cursor/
+.aider*
+.github/copilot/
+*.local.json
+
+# Build / coverage / cache lain
+coverage/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+*.log
+
+# Prompt / spec internal (opsional, bukan bagian aplikasi)
+project-ai-prompt.md

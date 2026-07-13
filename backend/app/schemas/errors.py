@@ -1,0 +1,14 @@
+"""Schemas for the consistent error envelope."""
+from typing import Any, Optional
+
+from pydantic import BaseModel
+
+
+class ErrorDetail(BaseModel):
+    code: str
+    message: str
+    details: Optional[Any] = None
+
+
+class ErrorResponse(BaseModel):
+    error: ErrorDetail
