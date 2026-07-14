@@ -1,4 +1,4 @@
-# Klasifikasi Dokumen Jurnal
+﻿# Klasifikasi Dokumen Jurnal
 
 Aplikasi web untuk mengklasifikasikan dokumen ilmiah (PDF) sebagai **Jurnal**
 atau **Non-Jurnal** menggunakan pipeline hibrida dua tahap.
@@ -13,7 +13,7 @@ atau **Non-Jurnal** menggunakan pipeline hibrida dua tahap.
 ## Cara Cepat Menjalankan (Quickstart)
 
 Model sudah tersedia di `backend/artifacts/linearsvc_model.joblib`. Butuh **dua
-terminal** — satu untuk backend, satu untuk frontend.
+terminal** â€” satu untuk backend, satu untuk frontend.
 
 ### 1. Backend (Terminal 1)
 
@@ -35,31 +35,20 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-Cek `http://localhost:8000/api/v1/health` — harus `"model_loaded": true`.
+Cek `http://localhost:8000/api/v1/health` â€” harus `"model_loaded": true`.
 Dokumentasi API interaktif: `http://localhost:8000/docs`.
 
 ### 2. Frontend (Terminal 2)
 
 ```bash
-cd frontend/vite-project
+cd frontend
 
 npm install        # lewati jika sudah terpasang
 npm run dev
 ```
 
-Buka `http://localhost:5173` di browser. Selesai — unggah PDF atau tempel teks.
+Buka `http://localhost:5173` di browser. Selesai â€” unggah PDF atau tempel teks.
 
-### Alternatif: Docker Compose
-
-Satu perintah untuk backend + frontend sekaligus (model harus sudah ada di
-`backend/artifacts/`):
-
-```bash
-docker compose up --build
-```
-
-- Backend: `http://localhost:8000`
-- Frontend: `http://localhost:5173`
 
 > Detail lengkap (environment variables, tes, penempatan model) ada di bagian
 > di bawah.
@@ -74,14 +63,14 @@ hasil bergantung pada data pelatihan model.
 
 ## Klasifikasi Hibrida Dua Tahap
 
-1. **Tahap 1 — Validasi Struktur (berbasis aturan).** Sistem memeriksa
+1. **Tahap 1 â€” Validasi Struktur (berbasis aturan).** Sistem memeriksa
    keberadaan empat bagian wajib: abstrak, metodologi, hasil, dan daftar
    pustaka. Jika satu saja tidak ditemukan, dokumen langsung dilabeli
    `non_jurnal` dan **model tidak dipanggil**.
-2. **Tahap 2 — Klasifikasi Teks (TF-IDF + LinearSVC).** Hanya dokumen dengan
+2. **Tahap 2 â€” Klasifikasi Teks (TF-IDF + LinearSVC).** Hanya dokumen dengan
    struktur lengkap yang dianalisis oleh model scikit-learn terlatih.
    Label akhir ditentukan oleh `model.predict()`. Margin keputusan hanya
-   ditampilkan sebagai diagnostik teknis — **bukan probabilitas**.
+   ditampilkan sebagai diagnostik teknis â€” **bukan probabilitas**.
 
 ## Diagram Arsitektur
 
@@ -106,44 +95,32 @@ joblib, python-multipart, pytest.
 **Frontend:** React (JavaScript, tanpa TypeScript), Vite, React Router, Axios,
 Tailwind CSS, Lucide React, Vitest, React Testing Library, ESLint.
 
-**Deployment:** Docker, Docker Compose. Tanpa database.
+**Deployment:** Lokal. Tanpa database.
 
 ## Struktur Proyek
 
 ```
 klasifikasi-dokumen-jurnal/
 ├── backend/
-│   ├── app/
-│   │   ├── api/          # routes_health, routes_documents, routes_texts, routes_model
-│   │   ├── core/         # config, exceptions, logging
-│   │   ├── schemas/      # classification, model, errors
-│   │   ├── services/     # model_service, pdf_extractor, text_normalizer,
-│   │   │                 # structure_detector, classification_service
-│   │   └── main.py
-│   ├── artifacts/        # linearsvc_model.joblib (tempatkan di sini)
+│   ├── app/          # routes, config, schemas, services
+│   ├── artifacts/    # linearsvc_model.joblib (tempatkan di sini)
 │   ├── tests/
 │   ├── requirements.txt
-│   ├── .env.example
-│   └── Dockerfile
-├── frontend/
-│   └── vite-project/     # aplikasi React (Vite)
-│       ├── src/
-│       ├── tests/
-│       ├── package.json
-│       └── Dockerfile
-├── docker-compose.yml
+│   └── .env.example
+├── frontend/         # aplikasi React (Vite)
+│   ├── public/
+│   ├── src/
+│   ├── tests/
+│   ├── package.json
+│   └── vite.config.js
 ├── README.md
 ├── .gitignore
 └── sample.env
 ```
-
-> **Catatan:** Proyek frontend berada pada `frontend/vite-project/`.
-
 ## Persyaratan
 
 - Python 3.11 atau lebih baru
 - Node.js 18 atau lebih baru + npm
-- (Opsional) Docker & Docker Compose
 
 ## Penempatan Model
 
@@ -180,7 +157,7 @@ copy artifacts_balanced\linearsvc_model.joblib backend\artifacts\linearsvc_model
 | `CORS_ORIGINS` | `http://localhost:5173` | Asal yang diizinkan (dipisah koma) |
 | `LOG_LEVEL` | `INFO` | Level logging |
 
-**Frontend** (`frontend/vite-project/.env`):
+**Frontend** (`frontend/.env`):
 
 | Variabel | Default |
 |----------|---------|
@@ -213,7 +190,7 @@ Backend berjalan di `http://localhost:8000`. Dokumentasi interaktif tersedia di
 ## Menjalankan Frontend
 
 ```bash
-cd frontend/vite-project
+cd frontend
 npm install
 npm run dev
 ```
@@ -232,23 +209,12 @@ pytest
 **Frontend:**
 
 ```bash
-cd frontend/vite-project
+cd frontend
 npm run test    # Vitest
 npm run lint    # ESLint
 npm run build   # Build produksi
 ```
 
-## Menjalankan dengan Docker Compose
-
-Pastikan model sudah ditempatkan di `backend/artifacts/linearsvc_model.joblib`
-terlebih dahulu, lalu:
-
-```bash
-docker compose up --build
-```
-
-- Backend: `http://localhost:8000`
-- Frontend: `http://localhost:5173`
 
 ## Dokumentasi Endpoint API
 
@@ -283,7 +249,7 @@ Jika model tidak tersedia:
 
 `multipart/form-data`, field `file` (PDF, maks 15 MB).
 
-Contoh respons — struktur tidak lengkap:
+Contoh respons â€” struktur tidak lengkap:
 
 ```json
 {
@@ -303,7 +269,7 @@ Contoh respons — struktur tidak lengkap:
 }
 ```
 
-Contoh respons — struktur lengkap:
+Contoh respons â€” struktur lengkap:
 
 ```json
 {
@@ -355,3 +321,5 @@ Kode error: `INVALID_FILE_TYPE`, `FILE_TOO_LARGE`, `EMPTY_FILE`,
 | Error `TEXT_TOO_SHORT` pada PDF valid | Kemungkinan PDF hasil pemindaian (tanpa teks digital). OCR belum didukung. |
 | CORS error di browser | Sesuaikan `CORS_ORIGINS` dengan asal frontend. |
 | `Network Error` di frontend | Pastikan backend berjalan dan `VITE_API_BASE_URL` benar. |
+
+
